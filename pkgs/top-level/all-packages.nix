@@ -2411,6 +2411,7 @@ in
   circus = callPackage ../tools/networking/circus { };
 
   citrix_workspace_unwrapped = callPackage ../applications/networking/remote/citrix-workspace { };
+  citrix_workspace_unwrapped_20_04_0 = citrix_workspace_unwrapped.override { version = "20.04.0"; };
   citrix_workspace_unwrapped_19_12_0 = citrix_workspace_unwrapped.override { version = "19.12.0"; };
   citrix_workspace_unwrapped_19_10_0 = citrix_workspace_unwrapped.override { version = "19.10.0"; };
   citrix_workspace_unwrapped_19_8_0 = citrix_workspace_unwrapped.override { version = "19.8.0"; };
@@ -12803,6 +12804,8 @@ in
 
   libinput-gestures = callPackage ../tools/inputmethods/libinput-gestures {};
 
+  libinstpatch = callPackage ../development/libraries/audio/libinstpatch { };
+
   libisofs = callPackage ../development/libraries/libisofs { };
 
   libisoburn = callPackage ../development/libraries/libisoburn { };
@@ -13178,6 +13181,7 @@ in
   libviper = callPackage ../development/libraries/libviper { };
 
   libvpx = callPackage ../development/libraries/libvpx { };
+  libvpx_1_8 = callPackage ../development/libraries/libvpx/1_8.nix { };
 
   libvterm = callPackage ../development/libraries/libvterm { };
   libvterm-neovim = callPackage ../development/libraries/libvterm-neovim { };
@@ -15573,7 +15577,7 @@ in
   mysql = mariadb; # TODO: move to aliases.nix
 
   mongodb = hiPrio mongodb-3_4;
-  
+
   mongodb-3_4 = callPackage ../servers/nosql/mongodb/v3_4.nix {
     sasl = cyrus_sasl;
     boost = boost160;
@@ -16452,11 +16456,6 @@ in
         kernelPatches.request_key_helper_updated
         kernelPatches.cpu-cgroup-v2."4.4"
         kernelPatches.modinst_arg_list_too_long
-        # https://github.com/NixOS/nixpkgs/issues/42755
-        # Remove these xen-netfront patches once they're included in
-        # upstream! Fixes https://github.com/NixOS/nixpkgs/issues/42755
-        kernelPatches.xen-netfront_fix_mismatched_rtnl_unlock
-        kernelPatches.xen-netfront_update_features_after_registering_netdev
       ];
   };
 
@@ -20519,6 +20518,8 @@ in
   nicotine-plus = callPackage ../applications/networking/soulseek/nicotine-plus {
     geoip = geoipWithDatabase;
   };
+
+  node-problem-detector = callPackage ../applications/networking/cluster/node-problem-detector { };
 
   notion = callPackage ../applications/window-managers/notion { };
 

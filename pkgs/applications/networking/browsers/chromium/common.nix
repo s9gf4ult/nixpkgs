@@ -1,4 +1,4 @@
-{ stdenv, llvmPackages, gn, ninja, which, nodejs, fetchpatch, gnutar
+{ stdenv, llvmPackages, gnChromium, ninja, which, nodejs, fetchpatch, gnutar
 
 # default dependencies
 , bzip2, flac, speex, libopus
@@ -149,10 +149,13 @@ let
       #
       # ++ optionals (channel == "dev") [ ( githubPatch "<patch>" "0000000000000000000000000000000000000000000000000000000000000000" ) ]
       # ++ optional (versionRange "68" "72") ( githubPatch "<patch>" "0000000000000000000000000000000000000000000000000000000000000000" )
-    ] ++ optionals (useVaapi) [
+    ] ++ optionals (useVaapi) ([
       # source: https://aur.archlinux.org/cgit/aur.git/tree/vaapi-fix.patch?h=chromium-vaapi
       ./patches/vaapi-fix.patch
-    ];
+    ] ++ optionals (versionRange "81" "82") [
+      (githubPatch "5b2ff215473e0526b5b24aeff4ad90d369b21c75" "0n00vh8wfpn2ay5fqsxcsx0zadnv7mihm72bcvnrfzh75nzbg902")
+      (githubPatch "98e343ab369e4262511b5fce547728e3e5eefba8" "00wwp653jk0k0yvix00vr7ymgck9dj7fxjwx4nc67ynn84dh6064")
+    ]);
 
     postPatch = ''
       # We want to be able to specify where the sandbox is via CHROME_DEVEL_SANDBOX
@@ -281,7 +284,7 @@ let
       libExecPath="${libExecPath}"
       python build/linux/unbundle/replace_gn_files.py \
         --system-libraries ${toString gnSystemLibraries}
-      ${gn}/bin/gn gen --args=${escapeShellArg gnFlags} out/Release | tee gn-gen-outputs.txt
+      ${gnChromium}/bin/gn gen --args=${escapeShellArg gnFlags} out/Release | tee gn-gen-outputs.txt
 
       # Fail if `gn gen` contains a WARNING.
       grep -o WARNING gn-gen-outputs.txt && echo "Found gn WARNING, exiting nix build" && exit 1
